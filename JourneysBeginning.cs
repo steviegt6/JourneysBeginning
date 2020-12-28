@@ -14,5 +14,20 @@ namespace JourneysBeginning
             Instance = this;
             TMLAssembly = typeof(ModLoader).Assembly;
         }
+
+        public override void Unload()
+        {
+            UnloadStaticFields();
+        }
+
+        public void UnloadStaticFields()
+        {
+            Logger.Info("Unloaded static fields...");
+
+            Instance = null;
+            TMLAssembly = null;
+
+            Logger.Info("Unloaded static fields!");
+        }
     }
 }
