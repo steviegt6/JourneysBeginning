@@ -13,7 +13,6 @@ namespace JourneysBeginning.Common
         /// </summary>
         /// <param name="message">The message you want to be logged.</param>
         /// <param name="logLevel">The level of logging (<see cref="Level.Debug"/>, <see cref="Level.Info"/>, <see cref="Level.Warn"/>, <see cref="Level.Error"/>, etc.). Defaults to <see cref="Level.Info"/></param>.
-        /// <param name="exception">The exception if one was thrown. Defaults to null.</param>
         /// <param name="mod">The mod that's doing the logging. Defaults to <see cref="JourneysBeginning"/></param>.
         public static void Log(object message, Level logLevel = null, Mod mod = null)
         {
