@@ -1,5 +1,5 @@
 using JourneysBeginning.Common;
-using JourneysBeginning.Common.IL;
+using JourneysBeginning.Common.ILEdits;
 using System.Reflection;
 using Terraria;
 using Terraria.ModLoader;
@@ -18,16 +18,14 @@ namespace JourneysBeginning
         {
             Instance = this;
             TMLAssembly = typeof(ModLoader).Assembly;
-
-            ILLoader.LoadIL();
         }
 
         public override void Load()
         {
-            JBLogger.Load();
-
             _origVersionNumber = Main.versionNumber;
             Main.versionNumber += $"\nJourney's Beginning v{Version}";
+
+            ILLoader.LoadIL();
         }
 
         public override void Unload()
@@ -37,18 +35,16 @@ namespace JourneysBeginning
             ILLoader.UnloadIL();
 
             UnloadStaticFields();
-
-            JBLogger.Unload();
         }
 
         public void UnloadStaticFields()
         {
-            JBLogger.Log("Unloaded static fields...");
+            JBLogger.Log("Unloading static fields...");
 
             Instance = null;
             TMLAssembly = null;
 
-            JBLogger.Log("Unloaded static fields!");
+            Logger.Info("Unloaded static fields!");
         }
     }
 }
