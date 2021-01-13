@@ -1,5 +1,4 @@
-﻿using JourneysBeginning.Common.Logging;
-using log4net;
+﻿using log4net;
 using log4net.Core;
 using System.ComponentModel;
 using Terraria.ModLoader.Config;

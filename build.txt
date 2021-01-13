@@ -1,5 +1,3 @@
 displayName = Journey's Beginning
 author = convicted tomatophile (Stevie)
 version = 1.0.0
-dllReferences = Libvaxy
-modReferences = Libvaxy@0.1.1
