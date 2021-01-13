@@ -1,6 +1,8 @@
-﻿using JourneysBeginning.Common.Interfaces.Loading;
+﻿using JourneysBeginning.Common.Bases;
+using JourneysBeginning.Common.Interfaces.Loading;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace JourneysBeginning.Common
 {
@@ -11,37 +13,40 @@ namespace JourneysBeginning.Common
     {
         public static bool HasLoaded { get; private set; }
 
-        public static Dictionary<string, IILEditable> ILEdits;
-        public static Dictionary<string, IDetourable> Detours;
+        public static Dictionary<string, ILEdit> ILEdits;
+        public static Dictionary<string, Detour> Detours;
 
         public static void Load()
         {
-            ILEdits = new Dictionary<string, IILEditable>();
-            Detours = new Dictionary<string, IDetourable>();
+            ILEdits = new Dictionary<string, ILEdit>();
+            Detours = new Dictionary<string, Detour>();
 
             Type[] types = JourneysBeginning.Instance.Code.GetTypes();
 
             foreach (Type type in types)
             {
-                if (type.IsAssignableFrom(typeof(IILEditable)))
+                if (type.IsAbstract || type.GetConstructor(new Type[0]) == null)
+                    continue;
+
+                if (type.IsSubclassOf(typeof(ILEdit)))
                 {
-                    IILEditable ilEdit = Activator.CreateInstance(type) as IILEditable;
+                    ILEdit ilEdit = Activator.CreateInstance(type) as ILEdit;
 
                     ILEdits.Add(ilEdit.DictKey, ilEdit);
                 }
 
-                if (type.IsAssignableFrom(typeof(IDetourable)))
+                if (type.IsSubclassOf(typeof(ILEdit)))
                 {
-                    IDetourable detour = Activator.CreateInstance(type) as IDetourable;
+                    Detour detour = Activator.CreateInstance(type) as Detour;
 
                     Detours.Add(detour.DictKey, detour);
                 }
             }
 
-            foreach (IILEditable ilEdit in ILEdits.Values)
+            foreach (ILEdit ilEdit in ILEdits.Values)
                 ilEdit.Load();
 
-            foreach (IDetourable detour in Detours.Values)
+            foreach (Detour detour in Detours.Values)
                 detour.Load();
 
             HasLoaded = true;
@@ -49,10 +54,10 @@ namespace JourneysBeginning.Common
 
         public static void Unload()
         {
-            foreach (IILEditable ilEdit in ILEdits.Values)
+            foreach (ILEdit ilEdit in ILEdits.Values)
                 ilEdit.Unload();
 
-            foreach (IDetourable detour in Detours.Values)
+            foreach (Detour detour in Detours.Values)
                 detour.Unload();
 
             ILEdits = null;
