@@ -1,13 +1,11 @@
 ﻿using JourneysBeginning.Common.Bases;
-using JourneysBeginning.Common.Interfaces.Loading;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace JourneysBeginning.Common
 {
     /// <summary>
-    /// Class reposible for handling automatically-loaded IL edits and detours.
+    /// Class responsible for handling automatically-loaded IL edits and detours.
     /// </summary>
     public static class ILManager
     {
@@ -35,7 +33,7 @@ namespace JourneysBeginning.Common
                     ILEdits.Add(ilEdit.DictKey, ilEdit);
                 }
 
-                if (type.IsSubclassOf(typeof(ILEdit)))
+                if (type.IsSubclassOf(typeof(Detour)))
                 {
                     Detour detour = Activator.CreateInstance(type) as Detour;
 
@@ -43,8 +41,12 @@ namespace JourneysBeginning.Common
                 }
             }
 
+            JourneysBeginning.ModLogger.Debug($"Found {ILEdits.Count} IL edits to load!");
+
             foreach (ILEdit ilEdit in ILEdits.Values)
                 ilEdit.Load();
+
+            JourneysBeginning.ModLogger.Debug($"Found {Detours.Count} detours to load!");
 
             foreach (Detour detour in Detours.Values)
                 detour.Load();

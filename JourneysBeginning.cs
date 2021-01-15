@@ -1,38 +1,34 @@
 using JourneysBeginning.Common;
-using JourneysBeginning.Common.Utilities;
 using log4net;
-using System.Reflection;
+using System.IO;
 using Terraria;
+using Terraria.IO;
 using Terraria.ModLoader;
 
 namespace JourneysBeginning
 {
     /// <summary>
     /// Main <c>Mod</c> class. <br />
-    /// Handles some core some, relatively uninteresting.
+    /// Handles some core stuff, relatively uninteresting.
     /// </summary>
     public class JourneysBeginning : Mod
     {
-        public static JourneysBeginning Instance { get; private set; }
+        public static JourneysBeginning Instance => ModContent.GetInstance<JourneysBeginning>();
 
         public static ILog ModLogger => Instance.Logger;
 
-        public Assembly TMLAssembly { get; set; }
+        public bool showChangelogTextOptional, showChangelogTextVersionDifference = false;
+        public Preferences SaveData = new Preferences(Main.SavePath + Path.DirectorySeparatorChar + "JourneysBeginning" + Path.DirectorySeparatorChar + "savedata.txt");
 
         private string _origVersionNumber;
 
-        public JourneysBeginning()
-        {
-            Instance = this;
-            TMLAssembly = typeof(ModLoader).Assembly;
-        }
-
         public override void Load()
         {
-            _origVersionNumber = Main.versionNumber;
-            Main.versionNumber += $"\nJourney's Beginning v{Version}";
-
             ILManager.Load();
+            SaveDataManager.Load();
+            SaveDataManager.Save();
+
+            ChangeVersionText();
         }
 
         public override void Unload()
@@ -40,18 +36,19 @@ namespace JourneysBeginning
             Main.versionNumber = _origVersionNumber;
 
             ILManager.Unload();
-
-            UnloadStaticFields();
+            SaveDataManager.Unload();
         }
 
-        public void UnloadStaticFields()
+        private void ChangeVersionText()
         {
-            Logger.Verbose("Unloading static fields...");
+            string defaultText = "v1.3.5.3";
 
-            Instance = null;
-            TMLAssembly = null;
+            _origVersionNumber = Main.versionNumber;
 
-            Logger.Verbose("Unloaded static fields!");
+            // Insert "Terraria " (with a space) before "v1.3.5.3" if it hasn't already.
+            // This is compatible with any other added text by any other mod.
+            if (Main.versionNumber.Contains(defaultText) && !Main.versionNumber.Contains($"Terraria {defaultText}"))
+                Main.versionNumber = Main.versionNumber.Insert(Main.versionNumber.IndexOf(defaultText), "Terraria ");
         }
     }
 }
