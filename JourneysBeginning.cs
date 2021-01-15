@@ -13,6 +13,15 @@ namespace JourneysBeginning
     /// </summary>
     public class JourneysBeginning : Mod
     {
+        #region ModHelpers fields
+
+        // Fields used for "cross-compat" with ModHelpers, handled by the mod itself
+        public static string GithubUserName => "Steviegt6";
+
+        public static string GithubProjectName => "JourneysBeginning";
+
+        #endregion ModHelpers fields
+
         public static JourneysBeginning Instance => ModContent.GetInstance<JourneysBeginning>();
 
         public static ILog ModLogger => Instance.Logger;
