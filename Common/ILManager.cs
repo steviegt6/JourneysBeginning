@@ -9,12 +9,24 @@ namespace JourneysBeginning.Common
     /// </summary>
     public static class ILManager
     {
+        /// <summary>
+        /// Whether all IL edits and Detours have been hooked and applied.
+        /// </summary>
         public static bool HasLoaded { get; private set; }
 
+        /// <summary>
+        /// A dictionary of all IL edits added by <see cref="JourneysBeginning"/>. <br />
+        /// The key for each <see cref="ILEdit"/> is <c>Type.MethodName</c>.
+        /// </summary>
         public static Dictionary<string, ILEdit> ILEdits;
+
+        /// <summary>
+        /// A dictionary of all detours added by <see cref="JourneysBeginning"/>. <br />
+        /// The key for each <see cref="Detour"/> is <c>Type.MethodName</c>.
+        /// </summary>
         public static Dictionary<string, Detour> Detours;
 
-        public static void Load()
+        internal static void Load()
         {
             ILEdits = new Dictionary<string, ILEdit>();
             Detours = new Dictionary<string, Detour>();
@@ -54,7 +66,7 @@ namespace JourneysBeginning.Common
             HasLoaded = true;
         }
 
-        public static void Unload()
+        internal static void Unload()
         {
             foreach (ILEdit ilEdit in ILEdits.Values)
                 ilEdit.Unload();

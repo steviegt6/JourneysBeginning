@@ -1,8 +1,11 @@
 using JourneysBeginning.Common;
+using JourneysBeginning.Content.UI;
 using log4net;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Terraria;
-using Terraria.IO;
 using Terraria.ModLoader;
 
 namespace JourneysBeginning
@@ -22,12 +25,21 @@ namespace JourneysBeginning
 
         #endregion ModHelpers fields
 
+        /// <summary>
+        /// The isntance of <see cref="JourneysBeginning"/> used by tML, fetched with <see cref="ModContent.GetInstance{T}"/>.
+        /// </summary>
         public static JourneysBeginning Instance => ModContent.GetInstance<JourneysBeginning>();
 
-        public static ILog ModLogger => Instance.Logger;
+        /// <summary>
+        /// Logger used by <see cref="JourneysBeginning"/>.
+        /// </summary>
+        internal static ILog ModLogger => Instance.Logger;
 
+        /// <summary>
+        /// <see cref="showChangelogTextOptional"/>: The boolean responsible for collapsing and uncollapsing the changelog text.
+        /// <see cref="showChangelogTextVersionDifference"/>: The boolean responsible for actually showing the changelog at all, only true on the first load after updating.
+        /// </summary>
         public bool showChangelogTextOptional, showChangelogTextVersionDifference = false;
-        public Preferences SaveData = new Preferences(Main.SavePath + Path.DirectorySeparatorChar + "JourneysBeginning" + Path.DirectorySeparatorChar + "savedata.txt");
 
         private string _origVersionNumber;
 
@@ -46,6 +58,13 @@ namespace JourneysBeginning
 
             ILManager.Unload();
             SaveDataManager.Unload();
+        }
+
+        public override bool LoadResource(string path, int length, Func<Stream> getStream)
+        {
+            ChangelogData.PopulateChangelogList(path, length, getStream);
+
+            return base.LoadResource(path, length, getStream);
         }
 
         private void ChangeVersionText()

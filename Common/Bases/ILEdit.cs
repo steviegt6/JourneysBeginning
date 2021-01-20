@@ -1,8 +1,9 @@
-﻿using JourneysBeginning.Common.Interfaces.Loading;
-
-namespace JourneysBeginning.Common.Bases
+﻿namespace JourneysBeginning.Common.Bases
 {
-    public abstract class ILEdit : IILEditable
+    /// <summary>
+    /// Abstract class that allows autoloading <c>IL edits</c>.
+    /// </summary>
+    public abstract class ILEdit
     {
         public abstract string DictKey { get; }
 

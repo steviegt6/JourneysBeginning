@@ -7,7 +7,7 @@ namespace JourneysBeginning.Content.Items
     public abstract class BaseItem : ModItem
     {
         /// <summary>
-        /// Assists with offsetting projectiles in <see cref="ModItem.Shoot(Player, ref Vector2, ref float, ref float, ref int, ref int, ref float)"/>
+        /// Assists with offsetting projectiles in <see cref="ModItem.Shoot(Player, ref Vector2, ref float, ref float, ref int, ref int, ref float)"/>.
         /// </summary>
         public void ProjectileOffsetHelper(ref float speedX, ref float speedY, ref Vector2 position, float off)
         {

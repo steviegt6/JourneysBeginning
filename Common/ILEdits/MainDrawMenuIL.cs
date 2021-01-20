@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Terraria;
@@ -22,10 +21,16 @@ namespace JourneysBeginning.Common.ILEdits
 
         private void ChangeDrawMethodIL(ILContext il)
         {
-            ILCursor c = new ILCursor(il);
+            il.CreateCursor(out ILCursor c);
 
-            #region Change Copyright Text draw method
+            ModifyCopyrightTextDrawMethod(c);
+            ModifyVersionTextAddChangelogText(c);
 
+            ILHelper.LogILCompletion("DrawMenu");
+        }
+
+        private void ModifyCopyrightTextDrawMethod(ILCursor c)
+        {
             if (!c.TryGotoNext(x => x.MatchLdstr("Copyright © 2017 Re-Logic")))
             {
                 ILHelper.LogILError("ldstr", "Copyright © 2017 Re-Logic");
@@ -53,6 +58,8 @@ namespace JourneysBeginning.Common.ILEdits
             c.Emit(OpCodes.Ldloc, 179); // text to draw
             c.EmitDelegate<Action<Color, string>>((color, text) =>
             {
+                // Match the drawColor to what text would normally be drawn like
+                // Thanks, Terraria
                 Color drawColor = color;
                 drawColor.R = (byte)((255 + drawColor.R) / 2);
                 drawColor.G = (byte)((255 + drawColor.R) / 2);
@@ -61,11 +68,10 @@ namespace JourneysBeginning.Common.ILEdits
 
                 Utils.DrawBorderString(Main.spriteBatch, text, new Vector2(Main.screenWidth - Main.fontMouseText.MeasureString(text).X - 10f, Main.screenHeight - 2f - Main.fontMouseText.MeasureString(text).Y), drawColor);
             });
+        }
 
-            #endregion Change Copyright Text draw method
-
-            #region Change Version Text draw method & add Changelog drawing
-
+        private void ModifyVersionTextAddChangelogText(ILCursor c)
+        {
             if (!c.TryGotoNext(x => x.MatchStloc(193)))
             {
                 ILHelper.LogILError("stloc.s", "193");
@@ -88,36 +94,38 @@ namespace JourneysBeginning.Common.ILEdits
             c.Emit(OpCodes.Ldloc, 193); // text to draw
             c.EmitDelegate<Action<int, Color, int, string>>((index, drawColor, xOffset, text) =>
             {
+                // Only draw when the white text would draw
                 if (index == 4)
                 {
                     DrawVersionText(drawColor, xOffset, text);
                     DrawChangelog();
                 }
             });
-
-            #endregion Change Version Text draw method & add Changelog drawing
-
-            ILHelper.LogILCompletion("DrawMenu");
         }
 
         private void DrawVersionText(Color drawColor, int xOffset, string text)
         {
+            // Split the text into a list of strings divided by newlines, reverse to order them properly, then convert them to an array
             string[] lines = text.Split('\n').Reverse().ToArray();
-            float extraYOffset = Main.fontMouseText.MeasureString(text).Y / lines.Length;
 
+            // Draw text for each line, offsetting it on the y-axis as well
             for (int i = 0; i < lines.Length; i++)
-                Utils.DrawBorderString(Main.spriteBatch, lines[i], new Vector2(xOffset + 10f, Main.screenHeight - 2f - (extraYOffset * (i + 1))), drawColor);
+                Utils.DrawBorderString(Main.spriteBatch, lines[i], new Vector2(xOffset + 10f, Main.screenHeight - 2f - (28f * (i + 1))), drawColor);
 
-            Utils.DrawBorderString(Main.spriteBatch, $"Journey's Beginning {JourneysBeginning.Instance.Version}", new Vector2(xOffset + 10f, Main.screenHeight - extraYOffset - 2f - Main.fontMouseText.MeasureString(text).Y), Color.Goldenrod);
+            // Finally, draw our text at the very top
+            Utils.DrawBorderString(Main.spriteBatch, $"Journey's Beginning {JourneysBeginning.Instance.Version}", new Vector2(xOffset + 10f, Main.screenHeight - 28f - 2f - Main.fontMouseText.MeasureString(text).Y), Color.Goldenrod);
         }
 
         private void DrawChangelog()
         {
+            // This code is only ran *after* updating, and will not run after reloading
             if (JourneysBeginning.Instance.showChangelogTextVersionDifference)
             {
-                // TODO: Move these to localization files & make it so the changelog is read from an online website or smth
-                string versionText = JourneysBeginning.Instance.showChangelogTextOptional ? "Collapse JB Changelog" : "Open JB Changelog";
-                Vector2 versionTextPos = new Vector2(10f + Main.fontMouseText.MeasureString(versionText).X, 38f);
+                string collapseText = JourneysBeginning.Instance.showChangelogTextOptional ?
+                    "Collapse JB Changelog" :
+                    "Open JB Changelog";
+
+                // todo: read from file
                 string changelogText = $"JB v{JourneysBeginning.Instance.Version} Changelog:" +
                     "\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris condimentum scelerisque rutrum. Morbi sagittis odio libero, ut volutpat augue vulputate aliquam." +
                     "\n* Curabitur dapibus imperdiet erat sed vestibulum." +
@@ -128,15 +136,57 @@ namespace JourneysBeginning.Common.ILEdits
                     "\n* Nulla turpis velit, scelerisque eget sem eu, cursus consectetur odio." +
                     "\nClass aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Aliquam pellentesque purus ac posuere pellentesque.";
 
-                // Draw middle version text
-                ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontMouseText, ChatManager.ParseMessage(versionText, Main.OurFavoriteColor).ToArray(), versionTextPos, 0f, Main.fontMouseText.MeasureString(versionText), Vector2.One, out _, maxWidth: 500f);
+                // 10f is the default offset, we then measaure and offset the screen by how wide the text is so it properly shows
+                // 38f is the defualt offset (10f) + how tall a fontMouseText string is (28f)
+                Vector2 collapseTextPos = new Vector2(10f + Main.fontMouseText.MeasureString(collapseText).X, 38f);
 
+                // This code is the same as above, but we offset the text on the y-axis as well to move it further down
+                Vector2 changelogTextPos = new Vector2(10f + Main.fontMouseText.MeasureString(changelogText).X, 38f + Main.fontMouseText.MeasureString(changelogText).Y);
+
+                // Parse and convert our strings into TextSnippet arrays for use with ChatManager.DrawColorCodedString
+                TextSnippet[] collapseTextSnippet = ChatManager.ParseMessage(collapseText, Color.Goldenrod).ToArray();
+                TextSnippet[] changelogTextSnippets = ChatManager.ParseMessage(changelogText, Color.White).ToArray();
+
+                // Draw collapse text
+                ChatManager.DrawColorCodedStringWithShadow(
+                    Main.spriteBatch,
+                    Main.fontMouseText,
+                    collapseTextSnippet,
+                    collapseTextPos,
+                    0f,
+                    Main.fontMouseText.MeasureString(collapseText),
+                    Vector2.One,
+                    out _,
+                    maxWidth: 500f);
+
+                // Draw changelog text
+                // Only drawn if the changelog isn't collapsed
                 if (JourneysBeginning.Instance.showChangelogTextOptional)
-                    // Draw changelog text
-                    ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontMouseText, ChatManager.ParseMessage(changelogText, Color.White).ToArray(), new Vector2(10f + Main.fontMouseText.MeasureString(changelogText).X, 38f + Main.fontMouseText.MeasureString(changelogText).Y), 0f, Main.fontMouseText.MeasureString(changelogText), Vector2.One, out _, maxWidth: 500f);
+                    ChatManager.DrawColorCodedStringWithShadow(
+                        Main.spriteBatch,
+                        Main.fontMouseText,
+                        changelogTextSnippets,
+                        changelogTextPos,
+                        0f,
+                        Main.fontMouseText.MeasureString(changelogText),
+                        Vector2.One,
+                        out _,
+                        maxWidth: 500f);
+
+                // Turn the mouse into a rectangle so we can check for intersection
+                Rectangle mouseRectangle = new Rectangle(Main.mouseX, Main.mouseY, 1, 1);
+
+                int collapseTextStartingXCoord = (int)collapseTextPos.X - (int)Main.fontMouseText.MeasureString(collapseText).X;
+                int collapseTextStartingYCoord = (int)collapseTextPos.Y - (int)Main.fontMouseText.MeasureString(collapseText).Y;
+                Rectangle collapseTextRectangle = new Rectangle(
+                    collapseTextStartingXCoord,
+                    collapseTextStartingYCoord,
+                    (int)Main.fontMouseText.MeasureString(collapseText).X, // Rectangle width should match text width
+                    (int)Main.fontMouseText.MeasureString(collapseText).Y); // Rectangle height should match text height
 
                 // Code that collapses and exapands the changelog
-                if (Main.mouseLeft && Main.mouseLeftRelease && new Rectangle(Main.mouseX, Main.mouseY, 1, 1).Intersects(new Rectangle((int)versionTextPos.X - (int)Main.fontMouseText.MeasureString(versionText).X, (int)versionTextPos.Y - (int)Main.fontMouseText.MeasureString(versionText).Y, (int)Main.fontMouseText.MeasureString(versionText).X, (int)Main.fontMouseText.MeasureString(versionText).Y)))
+                // Main.mouseLeft && Main.mouseLeftRelease indicates that a user clicked, it's only true for one frame, the same frame the user lets go of the left mouse button
+                if (Main.mouseLeft && Main.mouseLeftRelease && mouseRectangle.Intersects(collapseTextRectangle))
                     JourneysBeginning.Instance.showChangelogTextOptional = !JourneysBeginning.Instance.showChangelogTextOptional;
             }
         }

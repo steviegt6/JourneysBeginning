@@ -1,8 +1,9 @@
-﻿using JourneysBeginning.Common.Interfaces.Loading;
-
-namespace JourneysBeginning.Common.Bases
+﻿namespace JourneysBeginning.Common.Bases
 {
-    public abstract class Detour : IDetourable
+    /// <summary>
+    /// Abstract class that allows autoloading <c>Detours</c>.
+    /// </summary>
+    public abstract class Detour
     {
         public abstract string DictKey { get; }
 

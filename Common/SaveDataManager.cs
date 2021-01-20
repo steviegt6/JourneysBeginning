@@ -1,5 +1,8 @@
 ﻿using System;
+using System.IO;
+using Terraria;
 using Terraria.IO;
+using Terraria.ModLoader.Config;
 
 namespace JourneysBeginning.Common
 {
@@ -8,9 +11,12 @@ namespace JourneysBeginning.Common
     /// </summary>
     public static class SaveDataManager
     {
-        public static Preferences SaveData => JourneysBeginning.Instance.SaveData;
+        /// <summary>
+        /// The <see cref="Preferences"/> instance used by <see cref="JourneysBeginning"/>. This manages a config separate from <see cref="ModConfig"/>.
+        /// </summary>
+        public static Preferences SaveData => new Preferences(Main.SavePath + Path.DirectorySeparatorChar + "JourneysBeginning" + Path.DirectorySeparatorChar + "savedata.json");
 
-        public static void Load()
+        internal static void Load()
         {
             SaveData.Load();
 
@@ -20,13 +26,13 @@ namespace JourneysBeginning.Common
                 JourneysBeginning.Instance.showChangelogTextVersionDifference = true;
         }
 
-        public static void Save()
+        internal static void Save()
         {
             SaveData.Clear();
             SaveData.Put("LastKnownVersion", JourneysBeginning.Instance.Version.ToString());
             SaveData.Save();
         }
 
-        public static void Unload() => Save();
+        internal static void Unload() => Save();
     }
 }

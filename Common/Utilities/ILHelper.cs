@@ -4,6 +4,9 @@ namespace JourneysBeginning.Common.Utilities
 {
     public static class ILHelper
     {
+        /// <summary>
+        /// Creates an <see cref="ILCursor"/> with an <see cref="ILContext"/>.
+        /// </summary>
         public static void CreateCursor(this ILContext context, out ILCursor c) => c = new ILCursor(context);
 
         internal static void LogILError(string opcode, string toMatch) => JourneysBeginning.ModLogger.Error($"[IL] Unable to match \"{opcode}\" \"{toMatch}\"!");
