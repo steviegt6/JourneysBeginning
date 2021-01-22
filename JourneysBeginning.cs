@@ -2,9 +2,7 @@ using JourneysBeginning.Common;
 using JourneysBeginning.Content.UI;
 using log4net;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -36,7 +34,7 @@ namespace JourneysBeginning
         internal static ILog ModLogger => Instance.Logger;
 
         /// <summary>
-        /// <see cref="showChangelogTextOptional"/>: The boolean responsible for collapsing and uncollapsing the changelog text.
+        /// <see cref="showChangelogTextOptional"/>: The boolean responsible for collapsing and uncollapsing the changelog text. <br />
         /// <see cref="showChangelogTextVersionDifference"/>: The boolean responsible for actually showing the changelog at all, only true on the first load after updating.
         /// </summary>
         public bool showChangelogTextOptional, showChangelogTextVersionDifference = false;

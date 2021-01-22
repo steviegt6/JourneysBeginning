@@ -21,10 +21,7 @@ namespace JourneysBeginning.Content.UI.Panels
         public bool heightNeedsRecalculating;
         public readonly List<Tuple<string, float>> drawTexts = new List<Tuple<string, float>>();
 
-        public UIMessageBox(string text)
-        {
-            SetText(text);
-        }
+        public UIMessageBox(string text) => SetText(text);
 
         public override void OnActivate()
         {
@@ -35,21 +32,21 @@ namespace JourneysBeginning.Content.UI.Panels
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
             base.DrawSelf(spriteBatch);
-            CalculatedStyle space = GetInnerDimensions();
-            float position = 0f;
+            CalculatedStyle innerDims = GetInnerDimensions();
+            float pos = 0f;
 
             if (scrollbar != null)
-                position = -scrollbar.GetValue();
+                pos = -scrollbar.GetValue();
 
             foreach (var drawText in drawTexts)
             {
-                if (position + drawText.Item2 > space.Height)
+                if (pos + drawText.Item2 > innerDims.Height)
                     break;
 
-                if (position >= 0)
-                    Utils.DrawBorderString(spriteBatch, drawText.Item1, new Vector2(space.X, space.Y + position), Color.White, 1f);
+                if (pos >= 0)
+                    Utils.DrawBorderString(spriteBatch, drawText.Item1, new Vector2(innerDims.X, innerDims.Y + pos), Color.White, 1f);
 
-                position += drawText.Item2;
+                pos += drawText.Item2;
             }
             Recalculate();
         }
@@ -61,43 +58,48 @@ namespace JourneysBeginning.Content.UI.Panels
             if (!heightNeedsRecalculating)
                 return;
 
-            CalculatedStyle space = GetInnerDimensions();
+            CalculatedStyle innerDims = GetInnerDimensions();
 
-            if (space.Width <= 0 || space.Height <= 0)
+            if (innerDims.Width <= 0 || innerDims.Height <= 0)
                 return;
 
             DynamicSpriteFont font = Main.fontMouseText;
             drawTexts.Clear();
-            float position = 0f;
+            float pos = 0f;
             float textHeight = font.MeasureString("A").Y;
 
             foreach (string line in text.Split('\n'))
             {
                 string drawString = line;
-                do
+
+                while (drawString.Length > 0)
                 {
                     string remainder = "";
-                    while (font.MeasureString(drawString).X > space.Width)
+
+                    while (font.MeasureString(drawString).X > innerDims.Width)
                     {
                         remainder = drawString[drawString.Length - 1] + remainder;
                         drawString = drawString.Substring(0, drawString.Length - 1);
                     }
+
                     if (remainder.Length > 0)
                     {
                         int index = drawString.LastIndexOf(' ');
+
                         if (index >= 0)
                         {
                             remainder = drawString.Substring(index + 1) + remainder;
                             drawString = drawString.Substring(0, index);
                         }
                     }
+
                     drawTexts.Add(new Tuple<string, float>(drawString, textHeight));
-                    position += textHeight;
+                    pos += textHeight;
                     drawString = remainder;
                 }
-                while (drawString.Length > 0);
             }
-            height = position;
+
+            height = pos;
             heightNeedsRecalculating = false;
         }
 
@@ -110,6 +112,7 @@ namespace JourneysBeginning.Content.UI.Panels
         public override void ScrollWheel(UIScrollWheelEvent evt)
         {
             base.ScrollWheel(evt);
+
             if (scrollbar != null)
                 scrollbar.ViewPosition -= evt.ScrollWheelValue;
         }

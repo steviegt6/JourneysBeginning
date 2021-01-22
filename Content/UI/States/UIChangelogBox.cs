@@ -1,5 +1,4 @@
 ﻿using JourneysBeginning.Content.UI.Panels;
-using Microsoft.Xna.Framework;
 using System.Reflection;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
