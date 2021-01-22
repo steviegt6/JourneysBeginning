@@ -42,7 +42,7 @@ namespace JourneysBeginning.Common.Detours
                 string text = "Changelogs";
                 float textWidth = Main.fontMouseText.MeasureString(text).X;
                 Vector2 pos = Main.MouseScreen + new Vector2(16f);
-                pos.X = Math.Min(pos.X, (float)bounds.Right - textWidth - 16f);
+                pos.X = Math.Min(pos.X, bounds.Right - textWidth - 16f);
                 pos.Y = Math.Min(pos.Y, bounds.Bottom - 30);
                 Utils.DrawBorderStringFourWay(Main.spriteBatch, Main.fontMouseText, text, pos.X, pos.Y, Color.Goldenrod, Color.Black, Vector2.Zero);
             }

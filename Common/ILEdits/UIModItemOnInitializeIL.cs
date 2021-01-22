@@ -15,7 +15,7 @@ using Terraria.UI;
 
 namespace JourneysBeginning.Common.ILEdits
 {
-    public class UIModItemOnInitializeDrawSelfIL : ILEdit
+    public class UIModItemOnInitializeIL : ILEdit
     {
         private MethodInfo OnInitializeInfo;
 
