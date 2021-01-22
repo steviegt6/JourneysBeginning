@@ -15,7 +15,7 @@ using Terraria.UI;
 
 namespace JourneysBeginning.Common.ILEdits
 {
-    public class UIModItemOnInitializeIL : ILEdit
+    public class UIModItemOnInitializeDrawSelfIL : ILEdit
     {
         private MethodInfo OnInitializeInfo;
 
@@ -34,7 +34,7 @@ namespace JourneysBeginning.Common.ILEdits
             ModifyOnInitialize += AddConfigButtonIL;
         }
 
-        public override void Unload() => ModifyOnInitialize += AddConfigButtonIL;
+        public override void Unload() => ModifyOnInitialize -= AddConfigButtonIL;
 
         private void AddConfigButtonIL(ILContext il)
         {
@@ -80,6 +80,7 @@ namespace JourneysBeginning.Common.ILEdits
                     Top = { Pixels = 40f }
                 };
                 ChangelogData.ChangelogButton.OnClick += ChangelogButtonClick;
+
                 @this.Append(ChangelogData.ChangelogButton);
             });
         }
