@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JourneysBeginning.Content.Globals.GlobalNPCs;
+using System;
 using System.IO;
 using Terraria;
 using Terraria.IO;
@@ -14,22 +15,27 @@ namespace JourneysBeginning.Common
         /// <summary>
         /// The <see cref="Preferences"/> instance used by <see cref="JourneysBeginning"/>. This manages a config separate from <see cref="ModConfig"/>.
         /// </summary>
-        public static Preferences SaveData => new Preferences(Main.SavePath + Path.DirectorySeparatorChar + "JourneysBeginning" + Path.DirectorySeparatorChar + "savedata.json");
+        public static Preferences SaveData { get; set; }
 
         internal static void Load()
         {
+            SaveData = new Preferences(Main.SavePath + Path.DirectorySeparatorChar + "JourneysBeginning" + Path.DirectorySeparatorChar + "savedata");
             SaveData.Load();
 
             if (SaveData.Contains("LastKnownVersion"))
                 JourneysBeginning.Instance.showChangelogTextVersionDifference = new Version(SaveData.Get("LastKnownVersion", JourneysBeginning.Instance.Version.ToString())) < JourneysBeginning.Instance.Version;
             else
                 JourneysBeginning.Instance.showChangelogTextVersionDifference = true;
+
+            if (SaveData.Contains("SeenAnglerWarnMessage"))
+                AnglerShopGlobalNPC.HasSeenWarnMessage = SaveData.Get("SeenAnglerWarnMessage", false);
         }
 
         internal static void Save()
         {
             SaveData.Clear();
             SaveData.Put("LastKnownVersion", JourneysBeginning.Instance.Version.ToString());
+            SaveData.Put("SeenAnglerWarnMessage", AnglerShopGlobalNPC.HasSeenWarnMessage);
             SaveData.Save();
         }
 

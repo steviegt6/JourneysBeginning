@@ -11,6 +11,8 @@ namespace JourneysBeginning.Common.Utilities
 
         internal static void LogILError(string opcode, string toMatch) => JourneysBeginning.ModLogger.Error($"[IL] Unable to match \"{opcode}\" \"{toMatch}\"!");
 
+        internal static void LogILError(string opcode, string toMatch, int index) => JourneysBeginning.ModLogger.Error($"[IL] Unable to match \"{opcode}\" \"{toMatch}\" ({index - 1})!");
+
         internal static void LogILCompletion(string methodName) => JourneysBeginning.ModLogger.Debug($"[IL] Successfuly patched {methodName}!");
     }
 }
