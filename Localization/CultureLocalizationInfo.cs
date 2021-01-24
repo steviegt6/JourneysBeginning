@@ -11,47 +11,35 @@ namespace JourneysBeginning.Localization
     /// </summary>
     public struct CultureLocalizationInfo
     {
-        public readonly Dictionary<int, string> Translations;
+        public readonly Dictionary<GameCulture.CultureName, string> Translations;
 
         public CultureLocalizationInfo(string english, string german = "", string italian = "", string french = "", string spanish = "", string russian = "", string chinese = "", string portuguese = "", string polish = "")
         {
-            Translations = new Dictionary<int, string>()
+            Translations = new Dictionary<GameCulture.CultureName, string>()
             {
-                { GameCulture.English.LegacyId, english },
-                { GameCulture.German.LegacyId, german },
-                { GameCulture.Italian.LegacyId, italian },
-                { GameCulture.French.LegacyId, french },
-                { GameCulture.Spanish.LegacyId, spanish },
-                { GameCulture.Russian.LegacyId, russian },
-                { GameCulture.Chinese.LegacyId, chinese },
-                { GameCulture.Portuguese.LegacyId, portuguese },
-                { GameCulture.Polish.LegacyId, polish }
+                { GameCulture.CultureName.English, english },
+                { GameCulture.CultureName.German, german },
+                { GameCulture.CultureName.Italian, italian },
+                { GameCulture.CultureName.French, french },
+                { GameCulture.CultureName.Spanish, spanish },
+                { GameCulture.CultureName.Russian, russian },
+                { GameCulture.CultureName.Chinese, chinese },
+                { GameCulture.CultureName.Portuguese, portuguese },
+                { GameCulture.CultureName.Polish, polish }
             };
         }
 
         public void PopulateModTranslation(ModTranslation translation, int item, Mod mod, string color = "ffffff", bool configTooltip = false)
         {
-            if (!configTooltip)
-            {
-                string enText = $"[c/{color}:{Translations[GameCulture.English.LegacyId]}]";
+            string enText = configTooltip ? $"[c/{color}:{Translations[GameCulture.CultureName.English]}]" : Translations[GameCulture.CultureName.English];
 
-                if (item != ItemID.None)
-                    enText = $"[i:{item}] " + enText;
+            if (item != ItemID.None && !configTooltip)
+                enText = $"[i:{item}] " + enText;
 
-                foreach (int culture in Translations.Keys)
-                    translation.AddTranslation(culture, string.IsNullOrEmpty(Translations[culture]) ? enText : (item != ItemID.None ? $"[i:{item}] " : "") + $"[c/{color}:{Translations[culture]}]");
+            foreach (GameCulture.CultureName culture in Translations.Keys)
+                translation.AddTranslation(GameCulture.FromCultureName(culture), string.IsNullOrEmpty(Translations[culture]) ? enText : (item != ItemID.None && !configTooltip ? $"[i:{item}] " : "") + (!configTooltip ? $"[c/{color}:{Translations[culture]}]" : ""));
 
-                mod.AddTranslation(translation);
-            }
-            else
-            {
-                string enText = Translations[GameCulture.English.LegacyId];
-
-                foreach (int culture in Translations.Keys)
-                    translation.AddTranslation(culture, string.IsNullOrEmpty(Translations[culture]) ? enText : Translations[culture]);
-
-                mod.AddTranslation(translation);
-            }
+            mod.AddTranslation(translation);
         }
     }
 }

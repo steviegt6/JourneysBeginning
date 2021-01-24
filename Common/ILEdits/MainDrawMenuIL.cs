@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.UI.Chat;
 
 namespace JourneysBeginning.Common.ILEdits
@@ -66,7 +67,7 @@ namespace JourneysBeginning.Common.ILEdits
                 drawColor.B = (byte)((255 + drawColor.R) / 2);
                 drawColor.A = (byte)(drawColor.A * 0.3f);
 
-                Utils.DrawBorderString(Main.spriteBatch, text, new Vector2(Main.screenWidth - Main.fontMouseText.MeasureString(text).X - 10f, Main.screenHeight - 2f - Main.fontMouseText.MeasureString(text).Y), drawColor);
+                Utils.DrawBorderString(Main.spriteBatch, text, new Vector2(Main.screenWidth - FontAssets.MouseText.Value.MeasureString(text).X - 10f, Main.screenHeight - 2f - FontAssets.MouseText.Value.MeasureString(text).Y), drawColor);
             });
         }
 
@@ -113,7 +114,7 @@ namespace JourneysBeginning.Common.ILEdits
                 Utils.DrawBorderString(Main.spriteBatch, lines[i], new Vector2(xOffset + 10f, Main.screenHeight - 2f - (28f * (i + 1))), drawColor);
 
             // Finally, draw our text at the very top
-            Utils.DrawBorderString(Main.spriteBatch, $"Journey's Beginning {JourneysBeginning.Instance.Version}", new Vector2(xOffset + 10f, Main.screenHeight - 28f - 2f - Main.fontMouseText.MeasureString(text).Y), Color.Goldenrod);
+            Utils.DrawBorderString(Main.spriteBatch, $"Journey's Beginning {JourneysBeginning.Instance.Version}", new Vector2(xOffset + 10f, Main.screenHeight - 28f - 2f - FontAssets.MouseText.Value.MeasureString(text).Y), Color.Goldenrod);
         }
 
         private void DrawChangelog()
@@ -138,10 +139,10 @@ namespace JourneysBeginning.Common.ILEdits
 
                 // 10f is the default offset, we then measaure and offset the screen by how wide the text is so it properly shows
                 // 38f is the defualt offset (10f) + how tall a fontMouseText string is (28f)
-                Vector2 collapseTextPos = new Vector2(10f + Main.fontMouseText.MeasureString(collapseText).X, 38f);
+                Vector2 collapseTextPos = new Vector2(10f + FontAssets.MouseText.Value.MeasureString(collapseText).X, 38f);
 
                 // This code is the same as above, but we offset the text on the y-axis as well to move it further down
-                Vector2 changelogTextPos = new Vector2(10f + Main.fontMouseText.MeasureString(changelogText).X, 38f + Main.fontMouseText.MeasureString(changelogText).Y);
+                Vector2 changelogTextPos = new Vector2(10f + FontAssets.MouseText.Value.MeasureString(changelogText).X, 38f + FontAssets.MouseText.Value.MeasureString(changelogText).Y);
 
                 // Parse and convert our strings into TextSnippet arrays for use with ChatManager.DrawColorCodedString
                 TextSnippet[] collapseTextSnippet = ChatManager.ParseMessage(collapseText, Color.Goldenrod).ToArray();
@@ -150,11 +151,11 @@ namespace JourneysBeginning.Common.ILEdits
                 // Draw collapse text
                 ChatManager.DrawColorCodedStringWithShadow(
                     Main.spriteBatch,
-                    Main.fontMouseText,
+                    FontAssets.MouseText.Value,
                     collapseTextSnippet,
                     collapseTextPos,
                     0f,
-                    Main.fontMouseText.MeasureString(collapseText),
+                    FontAssets.MouseText.Value.MeasureString(collapseText),
                     Vector2.One,
                     out _,
                     maxWidth: 500f);
@@ -164,11 +165,11 @@ namespace JourneysBeginning.Common.ILEdits
                 if (JourneysBeginning.Instance.showChangelogTextOptional)
                     ChatManager.DrawColorCodedStringWithShadow(
                         Main.spriteBatch,
-                        Main.fontMouseText,
+                        FontAssets.MouseText.Value,
                         changelogTextSnippets,
                         changelogTextPos,
                         0f,
-                        Main.fontMouseText.MeasureString(changelogText),
+                        FontAssets.MouseText.Value.MeasureString(changelogText),
                         Vector2.One,
                         out _,
                         maxWidth: 500f);
@@ -176,13 +177,13 @@ namespace JourneysBeginning.Common.ILEdits
                 // Turn the mouse into a rectangle so we can check for intersection
                 Rectangle mouseRectangle = new Rectangle(Main.mouseX, Main.mouseY, 1, 1);
 
-                int collapseTextStartingXCoord = (int)collapseTextPos.X - (int)Main.fontMouseText.MeasureString(collapseText).X;
-                int collapseTextStartingYCoord = (int)collapseTextPos.Y - (int)Main.fontMouseText.MeasureString(collapseText).Y;
+                int collapseTextStartingXCoord = (int)collapseTextPos.X - (int)FontAssets.MouseText.Value.MeasureString(collapseText).X;
+                int collapseTextStartingYCoord = (int)collapseTextPos.Y - (int)FontAssets.MouseText.Value.MeasureString(collapseText).Y;
                 Rectangle collapseTextRectangle = new Rectangle(
                     collapseTextStartingXCoord,
                     collapseTextStartingYCoord,
-                    (int)Main.fontMouseText.MeasureString(collapseText).X, // Rectangle width should match text width
-                    (int)Main.fontMouseText.MeasureString(collapseText).Y); // Rectangle height should match text height
+                    (int)FontAssets.MouseText.Value.MeasureString(collapseText).X, // Rectangle width should match text width
+                    (int)FontAssets.MouseText.Value.MeasureString(collapseText).Y); // Rectangle height should match text height
 
                 // Code that collapses and exapands the changelog
                 // Main.mouseLeft && Main.mouseLeftRelease indicates that a user clicked, it's only true for one frame, the same frame the user lets go of the left mouse button

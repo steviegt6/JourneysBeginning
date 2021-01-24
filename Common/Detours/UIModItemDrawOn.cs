@@ -6,6 +6,7 @@ using MonoMod.RuntimeDetour.HookGen;
 using System;
 using System.Reflection;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -45,11 +46,11 @@ namespace JourneysBeginning.Common.Detours
                 Rectangle bounds = ((CalculatedStyle)typeof(UIPanel).GetMethod("GetOuterDimensions", BindingFlags.Instance | BindingFlags.Public).Invoke(self, new object[0] { })).ToRectangle();
                 bounds.Height += 16;
                 string text = "Changelogs";
-                float textWidth = Main.fontMouseText.MeasureString(text).X;
+                float textWidth = FontAssets.MouseText.Value.MeasureString(text).X;
                 Vector2 pos = Main.MouseScreen + new Vector2(16f);
                 pos.X = Math.Min(pos.X, bounds.Right - textWidth - 16f);
                 pos.Y = Math.Min(pos.Y, bounds.Bottom - 30);
-                Utils.DrawBorderStringFourWay(Main.spriteBatch, Main.fontMouseText, text, pos.X, pos.Y, Color.Goldenrod, Color.Black, Vector2.Zero);
+                Utils.DrawBorderStringFourWay(Main.spriteBatch, FontAssets.MouseText.Value, text, pos.X, pos.Y, Color.Goldenrod, Color.Black, Vector2.Zero);
             }
         }
     }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
+using System.Reflection;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -29,11 +31,13 @@ namespace JourneysBeginning.Content.Globals.GlobalNPCs
                     HasSeenWarnMessage = true;
                 }
 
+                // Main.npcshop = Main.MaxShopIDs - 1;
+                typeof(Main).GetProperty("npcShop", BindingFlags.Static | BindingFlags.Public).SetValue(null, Main.MaxShopIDs - 1);
+
                 Main.playerInventory = true;
                 Main.npcChatText = "";
-                Main.npcShop = Main.MaxShopIDs - 1;
                 Main.instance.shop[Main.npcShop].SetupShop(NPCID.Angler);
-                Main.PlaySound(SoundID.MenuTick);
+                SoundEngine.PlaySound(SoundID.MenuTick);
             }
         }
 

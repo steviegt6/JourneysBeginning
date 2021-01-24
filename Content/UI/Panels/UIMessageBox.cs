@@ -4,6 +4,7 @@ using ReLogic.Graphics;
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
@@ -71,7 +72,7 @@ namespace JourneysBeginning.Content.UI.Panels
             if (innerDims.Width <= 0 || innerDims.Height <= 0)
                 return;
 
-            DynamicSpriteFont font = Main.fontMouseText;
+            DynamicSpriteFont font = FontAssets.MouseText.Value;
             float pos = 0f;
             float textHeight = font.MeasureString("A").Y;
 

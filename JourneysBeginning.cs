@@ -49,6 +49,7 @@ namespace JourneysBeginning
             ILManager.Load();
             SaveDataManager.Load();
             SaveDataManager.Save();
+            ChangelogData.PopulateChangelogList(this);
 
             ChangeVersionText();
         }
@@ -58,16 +59,9 @@ namespace JourneysBeginning
             Main.versionNumber = _origVersionNumber;
 
             // Unload any data that goes unhandled by tML or contains static data.
+            ChangelogData.Unload();
             ILManager.Unload();
             SaveDataManager.Unload();
-        }
-
-        public override bool LoadResource(string path, int length, Func<Stream> getStream)
-        {
-            // Allow us to read .txt changelog files.
-            ChangelogData.PopulateChangelogList(path, length, getStream);
-
-            return base.LoadResource(path, length, getStream);
         }
 
         private void ChangeVersionText()

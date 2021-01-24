@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
 namespace JourneysBeginning.Content.UI
@@ -42,32 +43,33 @@ namespace JourneysBeginning.Content.UI
             return text;
         }
 
-        public static void PopulateChangelogList(string path, int length, Func<Stream> getStream)
+        public static void PopulateChangelogList(Mod mod)
         {
-            if (Changelogs == null)
-                Changelogs = new List<ChangelogData>();
-
-            // Check for text files, ignore build.txt and description.txt.
-            if (Path.GetExtension(path) == ".txt" && !path.Contains("build") && !path.Contains("description"))
+            // Create a list of existing changelogs.
+            List<string> changelogs = new List<string>
             {
-                // Convert the file name to a Version to allow for easy sorting.
-                string fileName = Path.GetFileNameWithoutExtension(path);
-                Version version = new Version(fileName);
+                "1.0.0.0"
+            };
 
-                // If it was successfully converted to a version, convert the bytes to a string and add the changelog data.
-                if (version != null)
-                {
-                    string text = "";
+            Changelogs = new List<ChangelogData>();
 
-                    using (Stream stream = getStream())
-                        text = Encoding.UTF8.GetString(stream.ReadBytes(length));
+            // Attempt to read every file specified.
+            foreach (string changelog in changelogs)
+            {
+                string file = $"Changelogs{Path.DirectorySeparatorChar}{changelog}.txt";
 
-                    Changelogs.Add(new ChangelogData(text, version));
-                }
+                if (mod.FileExists(file))
+                    Changelogs.Add(new ChangelogData(Encoding.UTF8.GetString(mod.GetFileBytes(file)), new Version(changelog)));
             }
 
             // Sort by Version.
             Changelogs = Changelogs.OrderByDescending(x => x.Version).ToList();
+        }
+
+        internal static void Unload()
+        {
+            ChangelogButton = null;
+            Changelogs = null;
         }
     }
 }
