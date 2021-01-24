@@ -17,9 +17,6 @@ namespace JourneysBeginning.Content.UI
         public static List<ChangelogData> Changelogs;
         public static UIImage ChangelogButton;
 
-        /// <summary>
-        /// Raw text. Try using <see cref="ToString"/>.
-        /// </summary>
         public string Text { get; set; }
 
         /// <summary>
@@ -33,15 +30,7 @@ namespace JourneysBeginning.Content.UI
             Version = version;
         }
 
-        public override string ToString()
-        {
-            string text = Text;
-
-            if (text.StartsWith("*"))
-                text.Remove(0, 1); // Remove the asterisk if the text starts with one.
-
-            return text;
-        }
+        public override string ToString() => Text;
 
         public static void PopulateChangelogList(Mod mod)
         {

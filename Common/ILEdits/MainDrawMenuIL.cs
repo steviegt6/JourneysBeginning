@@ -94,7 +94,6 @@ namespace JourneysBeginning.Common.ILEdits
             c.RemoveRange(29); // Remove the entire method
 
             c.Emit(OpCodes.Ldloc, 188); // num107 (for index)
-            c.Emit(OpCodes.Ldloc, 189); // text color
             c.Emit(OpCodes.Ldloc, 190); // x offset
             c.Emit(OpCodes.Ldloc, 195); // text to draw
             c.EmitDelegate<Action<int, int, string>>((index, xOffset, text) =>
