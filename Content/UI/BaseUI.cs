@@ -9,28 +9,36 @@ namespace JourneysBeginning.Content.UI {
         /// <summary>
         /// Contains all things inheriting from <see cref="BaseUI"/>.
         /// </summary>
-        public static List<BaseUI> UIs;
+        public static List<BaseUI> UIs = new List<BaseUI>();
 
         internal bool visible;
         public string layerToSortAfter;
 
-        private string _name;
+        protected string name;
+
+        protected BaseUI _instance;
         private UserInterface _userInterface;
 
-        public BaseUI() {
+        protected BaseUI() : base() {
+            Initializer();
             _userInterface = new UserInterface();
-            _userInterface.SetState(this);
-            UIs.Add(this);
+            _userInterface.SetState(_instance);
+            UIs.Add(_instance);
         }
+        /// <summary>
+        /// For doing stuff related to your instance and fields. Called before <see cref="BaseUI()"/>'s list adding stuff.
+        /// </summary>
+        protected abstract void Initializer();
+
         public void UpdateUI(GameTime g) {
             if (visible)
                 _userInterface?.Update(g);
         }
         public void SortAfter(List<GameInterfaceLayer> layers) {
-            int index = layers.FindIndex(l => l.Name.Contains(layerToSortAfter));
+            int index = layers.FindIndex(l => l.Name.Equals(layerToSortAfter));
 
             if (index != -1) {
-                layers.Insert(index, new LegacyGameInterfaceLayer(JourneysBeginning.Instance.Name + ": " + _name,
+                layers.Insert(index, new LegacyGameInterfaceLayer(JourneysBeginning.Instance.Name + ": " + name,
                     delegate {
                         if (visible) 
                             _userInterface.Draw(Terraria.Main.spriteBatch, new GameTime());

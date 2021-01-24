@@ -23,7 +23,7 @@ namespace JourneysBeginning.Content.Items {
     }
     public abstract class EngineerAccessory : EngineerBaseItem {
         public EngineerAccessory() =>
-            Subclass = "Accessory";
+            Subclass = "Engineer Accessory";
     }
     public abstract class EngineerWeapon : EngineerBaseItem {
         public override void SetDefaults() =>
