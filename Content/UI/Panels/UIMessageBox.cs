@@ -15,28 +15,35 @@ namespace JourneysBeginning.Content.UI.Panels
     /// </summary>
     public class UIMessageBox : UIPanel
     {
-        public UIScrollbar scrollbar;
-        public string text;
-        public float height;
-        public bool heightNeedsRecalculating;
+        public string Text { get; private set; }
+
         public readonly List<Tuple<string, float>> drawTexts = new List<Tuple<string, float>>();
 
-        public UIMessageBox(string text) => SetText(text);
+        private UIScrollbar _scrollbar;
+        private float _height;
+        private bool _heightNeedsRecalculating;
+
+        public UIMessageBox(string text)
+        {
+            SetText(text);
+        }
 
         public override void OnActivate()
         {
             base.OnActivate();
-            heightNeedsRecalculating = true;
+
+            _heightNeedsRecalculating = true;
         }
 
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
             base.DrawSelf(spriteBatch);
-            CalculatedStyle innerDims = GetInnerDimensions();
-            float pos = 0f;
 
-            if (scrollbar != null)
-                pos = -scrollbar.GetValue();
+            float pos = 0f;
+            CalculatedStyle innerDims = GetInnerDimensions();
+
+            if (_scrollbar != null)
+                pos = -_scrollbar.GetValue();
 
             foreach (var drawText in drawTexts)
             {
@@ -48,6 +55,7 @@ namespace JourneysBeginning.Content.UI.Panels
 
                 pos += drawText.Item2;
             }
+
             Recalculate();
         }
 
@@ -55,7 +63,7 @@ namespace JourneysBeginning.Content.UI.Panels
         {
             base.RecalculateChildren();
 
-            if (!heightNeedsRecalculating)
+            if (!_heightNeedsRecalculating)
                 return;
 
             CalculatedStyle innerDims = GetInnerDimensions();
@@ -64,11 +72,12 @@ namespace JourneysBeginning.Content.UI.Panels
                 return;
 
             DynamicSpriteFont font = Main.fontMouseText;
-            drawTexts.Clear();
             float pos = 0f;
             float textHeight = font.MeasureString("A").Y;
 
-            foreach (string line in text.Split('\n'))
+            drawTexts.Clear();
+
+            foreach (string line in Text.Split('\n'))
             {
                 string drawString = line;
 
@@ -99,13 +108,14 @@ namespace JourneysBeginning.Content.UI.Panels
                 }
             }
 
-            height = pos;
-            heightNeedsRecalculating = false;
+            _height = pos;
+            _heightNeedsRecalculating = false;
         }
 
         public override void Recalculate()
         {
             base.Recalculate();
+
             UpdateScrollbar();
         }
 
@@ -113,32 +123,32 @@ namespace JourneysBeginning.Content.UI.Panels
         {
             base.ScrollWheel(evt);
 
-            if (scrollbar != null)
-                scrollbar.ViewPosition -= evt.ScrollWheelValue;
+            if (_scrollbar != null)
+                _scrollbar.ViewPosition -= evt.ScrollWheelValue;
         }
 
         public void SetText(string text)
         {
-            this.text = text;
+            Text = text;
             ResetScrollbar();
         }
 
         public void ResetScrollbar()
         {
-            if (scrollbar != null)
+            if (_scrollbar != null)
             {
-                scrollbar.ViewPosition = 0;
-                heightNeedsRecalculating = true;
+                _scrollbar.ViewPosition = 0;
+                _heightNeedsRecalculating = true;
             }
         }
 
         public void SetScrollbar(UIScrollbar scrollbar)
         {
-            this.scrollbar = scrollbar;
+            _scrollbar = scrollbar;
             UpdateScrollbar();
-            heightNeedsRecalculating = true;
+            _heightNeedsRecalculating = true;
         }
 
-        private void UpdateScrollbar() => scrollbar?.SetView(GetInnerDimensions().Height, height);
+        private void UpdateScrollbar() => _scrollbar?.SetView(GetInnerDimensions().Height, _height);
     }
 }

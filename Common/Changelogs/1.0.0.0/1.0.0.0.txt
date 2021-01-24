@@ -1,7 +1,0 @@
-﻿Release v1.0.0.0
-
-Initial Journey's Beginning release. Woohoo!
-
-* <pending> items
-* <pending> NPCs
-* <etc>

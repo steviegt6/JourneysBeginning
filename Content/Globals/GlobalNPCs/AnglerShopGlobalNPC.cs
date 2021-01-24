@@ -7,6 +7,10 @@ namespace JourneysBeginning.Content.Globals.GlobalNPCs
 {
     public class AnglerShopGlobalNPC : GlobalNPC
     {
+        /// <summary>
+        /// Whether or not the current client has seen the warning message displayed when first talking to the Angler.
+        /// </summary>
+        // TODO: Just freakin' mash costumes and other sets down into bag-items.
         public static bool HasSeenWarnMessage = false;
 
         public override void SetupShop(int type, Chest shop, ref int nextSlot)
@@ -35,6 +39,7 @@ namespace JourneysBeginning.Content.Globals.GlobalNPCs
 
         private void SetupAnglerShop(Chest shop, ref int nextSlot)
         {
+            // 0-quest pre-HM items
             AnglerShopData.AddQuestItem(new AnglerShopData(0, false,
                 ItemID.FuzzyCarrot,
                 ItemID.AnglerHat,
@@ -42,7 +47,7 @@ namespace JourneysBeginning.Content.Globals.GlobalNPCs
                 ItemID.AnglerPants,
                 ItemID.GoldenBugNet,
                 ItemID.FishHook,
-                /*minecarp,*/
+                //TODO: Minecarp (1.4)
                 ItemID.HighTestFishingLine,
                 ItemID.AnglerEarring,
                 ItemID.TackleBox,
@@ -75,12 +80,16 @@ namespace JourneysBeginning.Content.Globals.GlobalNPCs
                 ItemID.JourneymanBait,
                 ItemID.ApprenticeBait), shop, ref nextSlot);
 
+            // 10-quest pre-HM items
             AnglerShopData.AddQuestItem(new AnglerShopData(10, true,
                 ItemID.FinWings,
                 ItemID.BottomlessBucket,
                 ItemID.SuperAbsorbantSponge), shop, ref nextSlot);
 
+            // Hotline Fishing Hook (25 quests, hardmode)
             AnglerShopData.AddQuestItem(new AnglerShopData(ItemID.HotlineFishingHook, reqQuests: 25, hardmode: true), shop, ref nextSlot);
+
+            // Golden Fishring Rod (30 quests, pre-HM)
             AnglerShopData.AddQuestItem(new AnglerShopData(ItemID.GoldenFishingRod, reqQuests: 30), shop, ref nextSlot);
         }
     }

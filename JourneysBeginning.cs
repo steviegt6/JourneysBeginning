@@ -1,5 +1,6 @@
 using JourneysBeginning.Common;
 using JourneysBeginning.Content.UI;
+using JourneysBeginning.Localization;
 using log4net;
 using System;
 using System.IO;
@@ -24,7 +25,7 @@ namespace JourneysBeginning
         #endregion ModHelpers fields
 
         /// <summary>
-        /// The isntance of <see cref="JourneysBeginning"/> used by tML, fetched with <see cref="ModContent.GetInstance{T}"/>.
+        /// The instance of <see cref="JourneysBeginning"/> used by tML, fetched with <see cref="ModContent.GetInstance{T}"/>.
         /// </summary>
         public static JourneysBeginning Instance => ModContent.GetInstance<JourneysBeginning>();
 
@@ -43,6 +44,8 @@ namespace JourneysBeginning
 
         public override void Load()
         {
+            // Initialize all the things!
+            LocalizationInitializer.Initialize();
             ILManager.Load();
             SaveDataManager.Load();
             SaveDataManager.Save();
@@ -54,12 +57,14 @@ namespace JourneysBeginning
         {
             Main.versionNumber = _origVersionNumber;
 
+            // Unload any data that goes unhandled by tML or contains static data.
             ILManager.Unload();
             SaveDataManager.Unload();
         }
 
         public override bool LoadResource(string path, int length, Func<Stream> getStream)
         {
+            // Allow us to read .txt changelog files.
             ChangelogData.PopulateChangelogList(path, length, getStream);
 
             return base.LoadResource(path, length, getStream);

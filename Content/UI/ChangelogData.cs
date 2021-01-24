@@ -16,13 +16,30 @@ namespace JourneysBeginning.Content.UI
         public static List<ChangelogData> Changelogs;
         public static UIImage ChangelogButton;
 
-        public string text;
-        public Version version;
+        /// <summary>
+        /// Raw text. Try using <see cref="ToString"/>.
+        /// </summary>
+        public string Text { get; set; }
+
+        /// <summary>
+        /// The changelog's respective version.
+        /// </summary>
+        public Version Version { get; set; }
 
         public ChangelogData(string text, Version version)
         {
-            this.text = text;
-            this.version = version;
+            Text = text;
+            Version = version;
+        }
+
+        public override string ToString()
+        {
+            string text = Text;
+
+            if (text.StartsWith("*"))
+                text.Remove(0, 1); // Remove the asterisk if the text starts with one.
+
+            return text;
         }
 
         public static void PopulateChangelogList(string path, int length, Func<Stream> getStream)
@@ -30,11 +47,14 @@ namespace JourneysBeginning.Content.UI
             if (Changelogs == null)
                 Changelogs = new List<ChangelogData>();
 
+            // Check for text files, ignore build.txt and description.txt.
             if (Path.GetExtension(path) == ".txt" && !path.Contains("build") && !path.Contains("description"))
             {
+                // Convert the file name to a Version to allow for easy sorting.
                 string fileName = Path.GetFileNameWithoutExtension(path);
                 Version version = new Version(fileName);
 
+                // If it was successfully converted to a version, convert the bytes to a string and add the changelog data.
                 if (version != null)
                 {
                     string text = "";
@@ -46,7 +66,8 @@ namespace JourneysBeginning.Content.UI
                 }
             }
 
-            Changelogs = Changelogs.OrderByDescending(x => x.version).ToList();
+            // Sort by Version.
+            Changelogs = Changelogs.OrderByDescending(x => x.Version).ToList();
         }
     }
 }

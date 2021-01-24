@@ -4,7 +4,7 @@ using Terraria;
 
 namespace JourneysBeginning.Content.Items
 {
-    public abstract class BaseItem : ModItem
+    public abstract class JBBaseItem : ModItem
     {
         /// <summary>
         /// Assists with offsetting projectiles in <see cref="ModItem.Shoot(Player, ref Vector2, ref float, ref float, ref int, ref int, ref float)"/>.
