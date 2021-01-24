@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework;
 namespace JourneysBeginning.Content.UI.States {
     public class UIEngineerCharges : BaseUI {
         protected override void Initializer() {
-            _instance = this;
             name = "EngineerUI";
             visible = true;
             layerToSortAfter = "Vanilla: Resource Bars";
