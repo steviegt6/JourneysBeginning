@@ -97,25 +97,25 @@ namespace JourneysBeginning.Common.ILEdits
             c.Emit(OpCodes.Ldloc, 189); // text color
             c.Emit(OpCodes.Ldloc, 190); // x offset
             c.Emit(OpCodes.Ldloc, 195); // text to draw
-            c.EmitDelegate<Action<int, Color, int, string>>((index, drawColor, xOffset, text) =>
+            c.EmitDelegate<Action<int, int, string>>((index, xOffset, text) =>
             {
                 // Only draw when the white text would draw
                 if (index == 4)
                 {
-                    DrawVersionText(drawColor, xOffset, text);
+                    DrawVersionText(xOffset, text);
                     DrawChangelog();
                 }
             });
         }
 
-        private void DrawVersionText(Color drawColor, int xOffset, string text)
+        private void DrawVersionText(int xOffset, string text)
         {
             // Split the text into a list of strings divided by newlines, reverse to order them properly, then convert them to an array
             string[] lines = text.Split('\n').Reverse().ToArray();
 
             // Draw text for each line, offsetting it on the y-axis as well
             for (int i = 0; i < lines.Length; i++)
-                Utils.DrawBorderString(Main.spriteBatch, lines[i], new Vector2(xOffset + 10f, Main.screenHeight - 2f - (28f * (i + 1))), drawColor);
+                Utils.DrawBorderString(Main.spriteBatch, lines[i], new Vector2(xOffset + 10f, Main.screenHeight - 2f - (28f * (i + 1))), Color.White);
 
             // Finally, draw our text at the very top
             Utils.DrawBorderString(Main.spriteBatch, $"Journey's Beginning {JourneysBeginning.Instance.Version}", new Vector2(xOffset + 10f, Main.screenHeight - 28f - 2f - FontAssets.MouseText.Value.MeasureString(text).Y), Color.Goldenrod);
