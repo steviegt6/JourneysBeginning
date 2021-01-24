@@ -66,7 +66,7 @@ namespace JourneysBeginning
 
         private void ChangeVersionText()
         {
-            string defaultText = "v1.3.5.3";
+            string defaultText = "v1.4.1.2";
 
             _origVersionNumber = Main.versionNumber;
 
