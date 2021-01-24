@@ -24,13 +24,16 @@ namespace JourneysBeginning.Common.ILEdits
         {
             il.CreateCursor(out ILCursor c);
 
-            ModifyCopyrightTextDrawMethod(c);
+            // REMOVED IN 1.4: ModifyCopyrightTextDrawMethod(c);
             ModifyVersionTextAddChangelogText(c);
 
             ILHelper.LogILCompletion("DrawMenu");
         }
 
+#pragma warning disable IDE0051 // Remove unused private members
+
         private void ModifyCopyrightTextDrawMethod(ILCursor c)
+#pragma warning restore IDE0051 // Remove unused private members
         {
             if (!c.TryGotoNext(x => x.MatchLdstr("Copyright © 2017 Re-Logic")))
             {
@@ -79,20 +82,21 @@ namespace JourneysBeginning.Common.ILEdits
                 return;
             }
 
-            if (!c.TryGotoNext(x => x.MatchLdsfld(typeof(Main).GetField("spriteBatch", BindingFlags.Static | BindingFlags.Public))))
-            {
-                ILHelper.LogILError("ldsfld", "Terraria.Main::spriteBatch");
-                return;
-            }
+            for (int i = 0; i < 2; i++)
+                if (!c.TryGotoNext(x => x.MatchLdsfld(typeof(Main).GetField("spriteBatch", BindingFlags.Static | BindingFlags.Public))))
+                {
+                    ILHelper.LogILError("ldsfld", "Terraria.Main::spriteBatch", i);
+                    return;
+                }
 
             c.Index++;
 
-            c.RemoveRange(28); // Remove the entire method
+            c.RemoveRange(29); // Remove the entire method
 
-            c.Emit(OpCodes.Ldloc, 186); // num107 (for index)
-            c.Emit(OpCodes.Ldloc, 187); // text color
-            c.Emit(OpCodes.Ldloc, 188); // x offset
-            c.Emit(OpCodes.Ldloc, 193); // text to draw
+            c.Emit(OpCodes.Ldloc, 188); // num107 (for index)
+            c.Emit(OpCodes.Ldloc, 189); // text color
+            c.Emit(OpCodes.Ldloc, 190); // x offset
+            c.Emit(OpCodes.Ldloc, 195); // text to draw
             c.EmitDelegate<Action<int, Color, int, string>>((index, drawColor, xOffset, text) =>
             {
                 // Only draw when the white text would draw
