@@ -22,8 +22,8 @@ namespace JourneysBeginning.Content.UI {
         protected BaseUI() : base() {
             Initializer();
             _userInterface = new UserInterface();
-            _userInterface.SetState(_instance);
-            UIs.Add(_instance);
+            _userInterface.SetState(this);
+            UIs.Add(this);
         }
         /// <summary>
         /// For doing stuff related to your instance and fields. Called before <see cref="BaseUI()"/>'s list adding stuff.
