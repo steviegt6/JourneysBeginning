@@ -1,5 +1,6 @@
 ﻿using Terraria.ModLoader;
 using JourneysBeginning.Content.UI.States;
+using System.Collections.Generic;
 
 namespace JourneysBeginning.Content.UI
 {
@@ -11,12 +12,14 @@ namespace JourneysBeginning.Content.UI
 
         void ILoadable.Load(Mod mod)
         {
+            BaseUI.UIs = new List<BaseUI>();
             Instance = new UIInitializer();
             engineerUIInstance = new UIEngineerCharges();
         }
 
         void ILoadable.Unload()
         {
+            BaseUI.UIs = null;
             Instance = null;
         }
     }

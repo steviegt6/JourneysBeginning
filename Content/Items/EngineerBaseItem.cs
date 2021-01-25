@@ -12,12 +12,14 @@ namespace JourneysBeginning.Content.Items
 
         // Protected set instead of virtual get only because you might want to change it at any time?
         public string Subclass { get; protected set; }
+        protected virtual bool UseSubclassLine { get; }
 
         public override void SetDefaults() => Item.DamageType = ModContent.GetInstance<Engineer>();
 
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            TooltipLine tooltip = new TooltipLine(JourneysBeginning.Instance, "SubclassTip", $"- {Subclass} subclass -")
+            string subText = UseSubclassLine ? Subclass + " " + "subclass" : Subclass;
+            TooltipLine tooltip = new TooltipLine(JourneysBeginning.Instance, "SubclassTip", $"- {subText} -")
             {
                 overrideColor = ThemeColor
             };
@@ -32,6 +34,7 @@ namespace JourneysBeginning.Content.Items
 
     public abstract class EngineerAccessory : EngineerBaseItem
     {
+        protected override bool UseSubclassLine => false;
         public EngineerAccessory()
         {
             Subclass = "Engineer Accessory";
@@ -40,6 +43,7 @@ namespace JourneysBeginning.Content.Items
 
     public abstract class EngineerWeapon : EngineerBaseItem
     {
+        protected override bool UseSubclassLine => true;
         public override void SetDefaults() => Item.DamageType = ModContent.GetInstance<Engineer>();
     }
 

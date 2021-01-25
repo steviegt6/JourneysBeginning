@@ -11,7 +11,7 @@ namespace JourneysBeginning.Content.UI
         /// <summary>
         /// Contains all things inheriting from <see cref="BaseUI"/>.
         /// </summary>
-        public static List<BaseUI> UIs = new List<BaseUI>();
+        public static List<BaseUI> UIs;
 
         public bool Visible { get; internal set; }
 
