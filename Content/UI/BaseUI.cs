@@ -17,8 +17,6 @@ namespace JourneysBeginning.Content.UI
 
         public string Name { get; protected set; }
 
-        public BaseUI Instance { get; protected set; }
-
         public string layerToSortAfter;
         private UserInterface _userInterface;
 
