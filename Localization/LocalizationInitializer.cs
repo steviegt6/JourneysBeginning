@@ -10,9 +10,9 @@ namespace JourneysBeginning.Localization
     /// </summary>
     public static class LocalizationInitializer
     {
-        public static ReadOnlyCollection<CultureLocalizationInfo> LocalizationInfo => _localizationInfo.AsReadOnly();
+        public static ReadOnlyCollection<CultureLocalizationInfo> LocalizationInfo { get; private set; }
 
-        private static List<CultureLocalizationInfo> _localizationInfo;
+        private static List<CultureLocalizationInfo> _localizationInfo { get; set; }
 
         internal static void Initialize()
         {
@@ -35,6 +35,8 @@ namespace JourneysBeginning.Localization
             AddTranslation("Config.Tooltips.AnglerShop", new CultureLocalizationInfo(english: "Whether or not the Angler should be given a shop, where he sells items depending on your progression in the game and how many quests you've completed."), configTranslation: true);
 
             #endregion Tooltips
+
+            LocalizationInfo = _localizationInfo.AsReadOnly();
         }
 
         public static void AddTranslation(Mod mod, CultureLocalizationInfo localInfo, string name, int item = ItemID.None, string color = "ffffff", bool configTranslation = false)
@@ -44,5 +46,11 @@ namespace JourneysBeginning.Localization
         }
 
         private static void AddTranslation(string name, CultureLocalizationInfo localInfo, int item = ItemID.None, string color = "ffffff", bool configTranslation = false) => AddTranslation(JourneysBeginning.Instance, localInfo, name, item, color, configTranslation);
+
+        internal static void Unload()
+        {
+            LocalizationInfo = null;
+            _localizationInfo = null;
+        }
     }
 }
