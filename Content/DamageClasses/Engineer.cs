@@ -6,6 +6,6 @@ namespace JourneysBeginning.Content.DamageClasses
     {
         public override void SetupContent() => ClassName.SetDefault("engineered damage");
 
-        protected override float GetBenefitFrom(DamageClass damageClass) => damageClass == DamageClass.Generic ? 1f : 0f;
+        protected override float GetBenefitFrom(DamageClass damageClass) => damageClass == Generic ? 1f : 0f;
     }
 }
