@@ -1,4 +1,4 @@
-using JourneysBeginning.Common;
+﻿using JourneysBeginning.Common;
 using JourneysBeginning.Content.UI;
 using JourneysBeginning.Localization;
 using log4net;
@@ -25,12 +25,12 @@ namespace JourneysBeginning
         /// <summary>
         /// The instance of <see cref="JourneysBeginning"/> used by tML, fetched with <see cref="ModContent.GetInstance{T}"/>.
         /// </summary>
-        public static JourneysBeginning Instance => ModContent.GetInstance<JourneysBeginning>();
+        public static JourneysBeginning Instance { get; private set; }
 
         /// <summary>
         /// Logger used by <see cref="JourneysBeginning"/>.
         /// </summary>
-        internal static ILog ModLogger => Instance.Logger;
+        internal static ILog ModLogger { get; private set; }
 
         /// <summary>
         /// <see cref="showChangelogTextOptional"/>: The boolean responsible for collapsing and uncollapsing the changelog text. <br />
@@ -40,6 +40,9 @@ namespace JourneysBeginning
 
         public override void Load()
         {
+            Instance = this;
+            ModLogger = Instance.Logger;
+
             // Initialize all the things!
             LocalizationInitializer.Initialize();
             ILManager.Load();
@@ -54,6 +57,10 @@ namespace JourneysBeginning
             ChangelogData.Unload();
             ILManager.Unload();
             SaveDataManager.Unload();
+            LocalizationInitializer.Unload();
+
+            ModLogger = null;
+            Instance = null;
         }
     }
 }
