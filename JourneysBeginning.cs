@@ -2,8 +2,6 @@ using JourneysBeginning.Common;
 using JourneysBeginning.Content.UI;
 using JourneysBeginning.Localization;
 using log4net;
-using System;
-using System.IO;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -40,8 +38,6 @@ namespace JourneysBeginning
         /// </summary>
         public bool showChangelogTextOptional, showChangelogTextVersionDifference = false;
 
-        private string _origVersionNumber;
-
         public override void Load()
         {
             // Initialize all the things!
@@ -50,30 +46,14 @@ namespace JourneysBeginning
             SaveDataManager.Load();
             SaveDataManager.Save();
             ChangelogData.PopulateChangelogList(this);
-
-            ChangeVersionText();
         }
 
         public override void Unload()
         {
-            Main.versionNumber = _origVersionNumber;
-
             // Unload any data that goes unhandled by tML or contains static data.
             ChangelogData.Unload();
             ILManager.Unload();
             SaveDataManager.Unload();
-        }
-
-        private void ChangeVersionText()
-        {
-            string defaultText = "v1.4.1.2";
-
-            _origVersionNumber = Main.versionNumber;
-
-            // Insert "Terraria " (with a space) before "v1.3.5.3" if it hasn't already.
-            // This is compatible with any other added text by any other mod.
-            if (Main.versionNumber.Contains(defaultText) && !Main.versionNumber.Contains($"Terraria {defaultText}"))
-                Main.versionNumber = Main.versionNumber.Insert(Main.versionNumber.IndexOf(defaultText), "Terraria ");
         }
     }
 }

@@ -101,6 +101,13 @@ namespace JourneysBeginning.Common.ILEdits
                 // Only draw when the white text would draw
                 if (index == 4)
                 {
+                    string defaultVersText = "v1.4.1.2";
+
+                    // Insert "Terraria " (with a space) before "v1..4.1.2" if it hasn't been already.
+                    // This is compatible with any other added text by any other mod.
+                    if (text.Contains(defaultVersText) && !text.Contains($"Terraria {defaultVersText}"))
+                        text = text.Insert(text.IndexOf(defaultVersText), "Terraria ");
+
                     DrawVersionText(xOffset, text);
                     DrawChangelog();
                 }
