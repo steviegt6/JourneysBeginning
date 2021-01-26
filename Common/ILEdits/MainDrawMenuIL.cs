@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.ModLoader;
 using Terraria.UI.Chat;
 
 namespace JourneysBeginning.Common.ILEdits
@@ -107,6 +108,15 @@ namespace JourneysBeginning.Common.ILEdits
                     // This is compatible with any other added text by any other mod.
                     if (text.Contains(defaultVersText) && !text.Contains($"Terraria {defaultVersText}"))
                         text = text.Insert(text.IndexOf(defaultVersText), "Terraria ");
+
+                    if (text.Contains(BuildInfo.BranchName))
+                        text = text.Insert(text.IndexOf(BuildInfo.BranchName), "\n");
+
+                    if (text.Contains(BuildInfo.Purpose.ToString()))
+                        text = text.Insert(text.IndexOf(BuildInfo.Purpose.ToString()), "\n");
+
+                    if (text.Contains($", built {BuildInfo.BuildDate:g}"))
+                        text = text.Replace($", built {BuildInfo.BuildDate:g}", $"\nbuilt {BuildInfo.BuildDate:g}");
 
                     DrawVersionText(xOffset, text);
                     DrawChangelog();
