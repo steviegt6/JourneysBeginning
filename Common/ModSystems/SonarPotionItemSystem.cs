@@ -48,10 +48,10 @@ namespace JourneysBeginning.Common.ModSystems
                             for (int i = 0; i < 4; i++)
                             {
                                 Vector2 offsetPos = Vector2.UnitY.RotatedBy(MathHelper.PiOver2 * i) * 2;
-                                Main.spriteBatch.Draw(TextureAssets.Item[itemType].ToFlatColor(Color.White), position + offsetPos, null, Color.White, 0f, TextureAssets.Item[itemType].Size() / 2f, 1f, SpriteEffects.None, 0f);
+                                Main.spriteBatch.Draw(TextureAssets.Item[itemType].ToFlatColor(Color.White), position + offsetPos, null, Color.White, 0f, TextureAssets.Item[itemType].Size() / 2f, text.scale, SpriteEffects.None, 0f);
                             }
 
-                            Main.spriteBatch.Draw(TextureAssets.Item[itemType].Value, position, null, Color.White, 0f, TextureAssets.Item[itemType].Size() / 2f, 1f, SpriteEffects.None, 0f);
+                            Main.spriteBatch.Draw(TextureAssets.Item[itemType].Value, position, null, Color.White, 0f, TextureAssets.Item[itemType].Size() / 2f, text.scale, SpriteEffects.None, 0f);
                         }
                     }
 
