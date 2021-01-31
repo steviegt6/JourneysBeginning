@@ -63,6 +63,16 @@ namespace JourneysBeginning.Common
 
         public static void Load()
         {
+            for (int i = 0; i < ItemID.Count; i++)
+            {
+                int copyID = ItemID.Sets.TextureCopyLoad[i];
+
+                if (copyID != -1)
+                    TextureAssets.Item[i] = TextureAssets.Item[copyID];
+                else
+                    TextureAssets.Item[i] = Main.Assets.Request<Texture2D>("Images/Item_" + i);
+            }
+
             Type assets = typeof(TextureAssets);
 
             AssetSwaps = new List<AssetSwap>()

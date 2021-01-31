@@ -2,6 +2,7 @@
 using JourneysBeginning.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
@@ -37,6 +38,11 @@ namespace JourneysBeginning.Common.ModSystems
                                 }
                             }
 
+                            Asset<Texture2D> itemTex = TextureAssets.Item[itemType];
+
+                            if (itemTex == null)
+                                itemTex = Main.Assets.Request<Texture2D>($"Images/Item_{itemType}");
+
                             Vector2 position = new Vector2(text.position.X - Main.screenPosition.X + (int)(FontAssets.ItemStack.Value.MeasureString(text.name).X / 2f), text.position.Y - Main.screenPosition.Y - (TextureAssets.Item[itemType].Width() / 2f) - 4);
 
                             for (int i = 0; i < 4; i++)
@@ -45,7 +51,7 @@ namespace JourneysBeginning.Common.ModSystems
                                 Main.spriteBatch.Draw(TextureAssets.Item[itemType].ToFlatColor(Color.White), position + offsetPos, null, Color.White, 0f, TextureAssets.Item[itemType].Size() / 2f, 1f, SpriteEffects.None, 0f);
                             }
 
-                            Main.spriteBatch.Draw(TextureAssets.Item[itemType].ToFlatColor(Color.White), position, null, Color.White, 0f, TextureAssets.Item[itemType].Size() / 2f, 1f, SpriteEffects.None, 0f);
+                            Main.spriteBatch.Draw(TextureAssets.Item[itemType].Value, position, null, Color.White, 0f, TextureAssets.Item[itemType].Size() / 2f, 1f, SpriteEffects.None, 0f);
                         }
                     }
 

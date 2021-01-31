@@ -43,7 +43,8 @@ namespace JourneysBeginning.Common.Utilities
             texture.GetData(textureData);
 
             for (int i = 0; i < textureData.Length; i++)
-                textureData[i] = new Color(color.R, color.G, color.B, textureData[i].A);
+                if (textureData[i].A > 0)
+                    textureData[i] = new Color(color.R, color.G, color.B, textureData[i].A);
 
             flatTexture.SetData(textureData);
             return flatTexture;
