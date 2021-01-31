@@ -3,6 +3,7 @@ using JourneysBeginning.Content.UI;
 using JourneysBeginning.Localization;
 using log4net;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace JourneysBeginning
@@ -44,6 +45,7 @@ namespace JourneysBeginning
             ModLogger = Instance.Logger;
 
             // Initialize all the things!
+            AssetManager.Load();
             LocalizationInitializer.Initialize();
             ILManager.Load();
             SaveDataManager.Load();
@@ -51,9 +53,12 @@ namespace JourneysBeginning
             ChangelogData.PopulateChangelogList(this);
         }
 
+        public override void PostSetupContent() => AssetManager.SwapAssets();
+
         public override void Unload()
         {
             // Unload any data that goes unhandled by tML or contains static data.
+            AssetManager.Unload();
             ChangelogData.Unload();
             ILManager.Unload();
             SaveDataManager.Unload();
