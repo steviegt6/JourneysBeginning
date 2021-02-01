@@ -2,8 +2,8 @@
 using JourneysBeginning.Content.UI;
 using JourneysBeginning.Localization;
 using log4net;
+using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace JourneysBeginning
@@ -32,6 +32,11 @@ namespace JourneysBeginning
         /// Logger used by <see cref="JourneysBeginning"/>.
         /// </summary>
         internal static ILog ModLogger { get; private set; }
+
+        /// <summary>
+        /// Identical to <see cref="Main.OurFavoriteColor"/> but not affected by the 1/100 easter egg.
+        /// </summary>
+        public static Color TerrariaGoldYellow = new Color(255, 231, 69);
 
         /// <summary>
         /// <see cref="showChangelogTextOptional"/>: The boolean responsible for collapsing and uncollapsing the changelog text. <br />

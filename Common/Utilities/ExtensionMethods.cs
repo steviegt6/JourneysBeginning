@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
+using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace JourneysBeginning.Common.Utilities
@@ -49,5 +52,25 @@ namespace JourneysBeginning.Common.Utilities
             flatTexture.SetData(textureData);
             return flatTexture;
         }
+
+        /// <summary>
+        /// Returns <c>true</c> if the tooltip is found.
+        /// </summary>
+        public static bool TryGetTooltipLine(this List<TooltipLine> tooltips, string modName, string tooltipName, out TooltipLine line) => (line = tooltips.Find(tooltip => tooltip.mod == modName && tooltip.Name == tooltipName)) != null;
+
+        /// <summary>
+        /// Returns <c>true</c> if the tooltip is found.
+        /// </summary>
+        public static bool TryGetVanillaTooltipLine(this List<TooltipLine> tooltips, string tooltipName, out TooltipLine line) => (line = tooltips.Find(tooltip => tooltip.mod == "Terraria" && tooltip.Name == tooltipName)) != null;
+
+        /// <summary>
+        /// Returns <c>true</c> if the tooltip is found.
+        /// </summary>
+        public static bool TryGetTooltipLine(this ReadOnlyCollection<TooltipLine> tooltips, string modName, string tooltipName, out TooltipLine line) => (line = tooltips.First(tooltip => tooltip.mod == modName && tooltip.Name == tooltipName)) != null;
+
+        /// <summary>
+        /// Returns <c>true</c> if the tooltip is found.
+        /// </summary>
+        public static bool TryGetVanillaTooltipLine(this ReadOnlyCollection<TooltipLine> tooltips, string tooltipName, out TooltipLine line) => (line = tooltips.First(tooltip => tooltip.mod == "Terraria" && tooltip.Name == tooltipName)) != null;
     }
 }

@@ -40,7 +40,7 @@ namespace JourneysBeginning.Content.Menus
             for (int i = 0; i < 4; i++)
                 spriteBatch.DrawString(FontAssets.DeathText.Value, drawText, new Vector2(Main.screenWidth / 2 + (Logo.Width() / 2), logoDrawCenter.Y * 1.5f) + (Vector2.UnitY.RotatedBy(MathHelper.PiOver2 * i) * 2), new Color(0, 0, 0, 200), MathHelper.ToRadians(-20f), FontAssets.DeathText.Value.MeasureString(drawText) / 2, 0.5f * textScale, SpriteEffects.None, 0f);
 
-            spriteBatch.DrawString(FontAssets.DeathText.Value, drawText, new Vector2(Main.screenWidth / 2 + (Logo.Width() / 2), logoDrawCenter.Y * 1.5f), Main.OurFavoriteColor, MathHelper.ToRadians(-20f), FontAssets.DeathText.Value.MeasureString(drawText) / 2, 0.5f * textScale, SpriteEffects.None, 0f);
+            spriteBatch.DrawString(FontAssets.DeathText.Value, drawText, new Vector2(Main.screenWidth / 2 + (Logo.Width() / 2), logoDrawCenter.Y * 1.5f), JourneysBeginning.TerrariaGoldYellow, MathHelper.ToRadians(-20f), FontAssets.DeathText.Value.MeasureString(drawText) / 2, 0.5f * textScale, SpriteEffects.None, 0f);
         }
     }
 }
