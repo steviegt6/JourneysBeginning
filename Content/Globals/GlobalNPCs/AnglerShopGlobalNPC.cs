@@ -51,7 +51,7 @@ namespace JourneysBeginning.Content.Globals.GlobalNPCs
                 ItemID.AnglerPants,
                 ItemID.GoldenBugNet,
                 ItemID.FishHook,
-                //TODO: Minecarp (1.4)
+                ItemID.FishMinecart,
                 ItemID.HighTestFishingLine,
                 ItemID.AnglerEarring,
                 ItemID.TackleBox,
